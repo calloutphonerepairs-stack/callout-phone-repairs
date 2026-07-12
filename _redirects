@@ -1,0 +1,5 @@
+# Canonical host: non-www apex. Single-hop redirects, preserve path + query.
+https://www.calloutphonerepairs.co.uk/* https://calloutphonerepairs.co.uk/:splat 301!
+
+# Cloudflare Pages preview domain -> canonical (avoid duplicate indexing)
+https://:project.pages.dev/* https://calloutphonerepairs.co.uk/:splat 301!

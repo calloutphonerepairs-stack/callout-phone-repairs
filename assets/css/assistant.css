@@ -1,0 +1,134 @@
+/* ==========================================================================
+   Quote Assistant & Forms — app-like, polished, accessible
+   ========================================================================== */
+
+.quote-shell {
+  background: var(--white); border: 1px solid var(--slate-200);
+  border-radius: var(--r-xl); box-shadow: var(--shadow-lg);
+  padding: var(--sp-5); max-width: 520px; margin-inline: auto; width: 100%;
+  position: relative; overflow: hidden;
+}
+@media (min-width: 480px){ .quote-shell { padding: var(--sp-6); } }
+
+/* device-screen motif: subtle top bezel line */
+.quote-shell::before {
+  content:""; position:absolute; top:0; left:0; right:0; height:4px;
+  background: linear-gradient(90deg, var(--blue-600), var(--blue-500));
+}
+
+.quote-head { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); margin-bottom: var(--sp-5); }
+.quote-head h3 { font-size: 1.15rem; margin: 0; }
+.quote-head .pill { flex: none; }
+
+/* Progress */
+.q-progress { display: flex; gap: 6px; margin-bottom: var(--sp-5); }
+.q-progress-seg { height: 6px; flex: 1; background: var(--slate-200); border-radius: var(--r-full); overflow: hidden; }
+.q-progress-seg .fill { display: block; height: 100%; width: 0; background: var(--blue-600); border-radius: inherit; transition: width .35s var(--ease); }
+.q-progress-seg.done .fill { width: 100%; }
+.q-progress-seg.active .fill { width: 100%; background: var(--blue-500); }
+
+.q-steplabel { font-family: var(--font-display); font-size: 0.8rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--slate-400); margin-bottom: var(--sp-2); }
+.q-question { font-family: var(--font-display); font-size: 1.3rem; font-weight: 600; color: var(--ink-900); margin-bottom: var(--sp-5); line-height: 1.2; }
+
+/* Steps container */
+.q-step { display: none; animation: qfade .3s var(--ease); }
+.q-step.active { display: block; }
+@keyframes qfade { from { opacity: 0; transform: translateY(8px);} to { opacity:1; transform:none; } }
+@media (prefers-reduced-motion: reduce){ .q-step { animation: none; } }
+
+/* Choice cards */
+.q-choices { display: grid; gap: var(--sp-3); grid-template-columns: 1fr 1fr; }
+.q-choices.cols-1 { grid-template-columns: 1fr; }
+.q-choice {
+  display: flex; align-items: center; gap: var(--sp-3); text-align: left;
+  padding: var(--sp-4); min-height: 60px; width: 100%;
+  background: var(--white); border: 2px solid var(--slate-200); border-radius: var(--r-md);
+  font-family: var(--font-body); font-size: 1rem; font-weight: 500; color: var(--ink-900);
+  cursor: pointer; transition: border-color .15s var(--ease), background .15s var(--ease), transform .1s var(--ease);
+}
+.q-choice:hover { border-color: var(--blue-500); background: var(--blue-100); }
+.q-choice:active { transform: scale(.98); }
+.q-choice[aria-pressed="true"], .q-choice.selected { border-color: var(--blue-600); background: var(--blue-100); box-shadow: inset 0 0 0 1px var(--blue-600); }
+.q-choice .q-choice-ic { width: 34px; height: 34px; flex: none; display: grid; place-items: center; color: var(--blue-600); }
+.q-choice .q-choice-ic svg { width: 26px; height: 26px; }
+
+/* Inputs */
+.field { margin-bottom: var(--sp-4); }
+.field label { display: block; font-family: var(--font-display); font-weight: 600; font-size: 0.9rem; color: var(--ink-800); margin-bottom: var(--sp-2); }
+.field label .req { color: var(--danger-600); }
+.field .hint { font-size: 0.82rem; color: var(--slate-500); margin-top: var(--sp-2); }
+.input, .select, .textarea {
+  width: 100%; font-family: var(--font-body); font-size: 1rem; color: var(--ink-900);
+  padding: 0.85rem 1rem; min-height: 52px; background: var(--white);
+  border: 2px solid var(--slate-200); border-radius: var(--r-md); transition: border-color .15s var(--ease), box-shadow .15s var(--ease);
+}
+.input:focus, .select:focus, .textarea:focus { outline: none; border-color: var(--blue-600); box-shadow: 0 0 0 3px var(--blue-100); }
+.textarea { min-height: 110px; resize: vertical; }
+.input[aria-invalid="true"], .select[aria-invalid="true"] { border-color: var(--danger-600); }
+.field-error { display: none; color: var(--danger-600); font-size: 0.82rem; margin-top: var(--sp-2); font-weight: 500; }
+.field.invalid .field-error { display: block; }
+
+/* segmented control (preferred contact) */
+.segmented { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; background: var(--slate-100); padding: 5px; border-radius: var(--r-md); }
+.segmented label { margin: 0; }
+.segmented input { position: absolute; opacity: 0; pointer-events: none; }
+.segmented span {
+  display: flex; align-items: center; justify-content: center; gap: 6px; padding: 0.6rem; min-height: 44px;
+  border-radius: 9px; font-family: var(--font-display); font-weight: 600; font-size: 0.9rem; color: var(--slate-500); cursor: pointer; transition: all .15s var(--ease);
+}
+.segmented input:checked + span { background: var(--white); color: var(--ink-900); box-shadow: var(--shadow-sm); }
+.segmented input:focus-visible + span { box-shadow: var(--shadow-focus); }
+
+/* Summary chip row */
+.q-summary { display: flex; flex-wrap: wrap; gap: var(--sp-2); margin-bottom: var(--sp-5); }
+.q-chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--slate-100); border-radius: var(--r-full); font-size: 0.82rem; font-weight: 600; color: var(--ink-700); font-family: var(--font-display); }
+.q-chip svg { width: 14px; height: 14px; color: var(--blue-600); }
+
+/* Nav buttons */
+.q-nav { display: flex; gap: var(--sp-3); margin-top: var(--sp-5); }
+.q-back { background: none; border: none; color: var(--slate-500); font-family: var(--font-display); font-weight: 600; cursor: pointer; padding: var(--sp-3); display: inline-flex; align-items: center; gap: 6px; }
+.q-back:hover { color: var(--ink-900); }
+.q-back svg { width: 18px; height: 18px; }
+.q-nav .btn { flex: 1; }
+
+/* Finish paths */
+.q-finish-paths { display: grid; gap: var(--sp-3); }
+.q-finish-divider { display: flex; align-items: center; gap: var(--sp-3); color: var(--slate-400); font-size: 0.82rem; font-weight: 600; font-family: var(--font-display); text-transform: uppercase; letter-spacing: .06em; margin: var(--sp-2) 0; }
+.q-finish-divider::before, .q-finish-divider::after { content:""; flex: 1; height: 1px; background: var(--slate-200); }
+
+/* Success / error states */
+.q-result { text-align: center; padding: var(--sp-4) 0; }
+.q-result-icon { width: 68px; height: 68px; border-radius: var(--r-full); display: grid; place-items: center; margin: 0 auto var(--sp-4); }
+.q-result-icon.ok { background: var(--success-050); color: var(--success-600); }
+.q-result-icon.err { background: var(--danger-050); color: var(--danger-600); }
+.q-result-icon svg { width: 36px; height: 36px; }
+.q-result h3 { margin-bottom: var(--sp-3); }
+.q-result p { color: var(--slate-500); margin-bottom: var(--sp-5); }
+
+/* noscript fallback spacing */
+.q-noscript .field { text-align: left; }
+
+/* file input */
+.file-row { display: flex; align-items: center; gap: var(--sp-3); }
+.file-label {
+  display: inline-flex; align-items: center; gap: var(--sp-2); padding: 0.7rem 1rem; border: 2px dashed var(--slate-200);
+  border-radius: var(--r-md); cursor: pointer; font-family: var(--font-display); font-weight: 600; font-size: 0.9rem; color: var(--slate-500); background: var(--slate-100);
+}
+.file-label:hover { border-color: var(--blue-500); color: var(--ink-900); }
+.file-label svg { width: 20px; height: 20px; }
+.file-name { font-size: 0.85rem; color: var(--slate-500); }
+
+/* consent */
+.consent { display: flex; gap: var(--sp-3); align-items: flex-start; font-size: 0.86rem; color: var(--slate-500); }
+.consent input { width: 20px; height: 20px; flex: none; margin-top: 2px; accent-color: var(--blue-600); }
+.consent a { color: var(--blue-600); }
+
+/* ---- Progressive enhancement visibility ---- */
+/* Default (no JS): plain form shown, stepped flow hidden via [hidden]. */
+.js-only { display: none; }
+.js .js-only { display: revert; }
+.js .pill.js-only { display: inline-flex; }
+/* When JS is active, hide the plain wrapper (JS relocates the form into the flow) */
+.js #q-plain.q-plain[data-enhanced="true"] { display: none; }
+/* The stepped block is [hidden] in markup; JS removes hidden after init */
+.q-stepped[hidden] { display: none; }
