@@ -1,0 +1,2 @@
+# Host canonicalisation (www -> apex, *.pages.dev) is a Cloudflare dashboard
+# Redirect Rule / Bulk Redirect — not supported in this file. See CLOUDFLARE-REDIRECTS.md.

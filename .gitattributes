@@ -1,0 +1,4 @@
+# Release files are committed byte-for-byte as approved (see the v10.1 manifest SHA-256 values).
+# No line-ending conversion for the deployable trees; core.autocrlf is left as configured.
+/public/** -text
+/functions/** -text

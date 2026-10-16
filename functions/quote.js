@@ -29,6 +29,21 @@ const DESTINATION = "calloutphonerepairs@gmail.com";
 // so transactional mail is isolated from any mail on the root domain.
 const FROM = "Website Enquiries <quotes@send.calloutphonerepairs.co.uk>";
 
+// Business identity for customer-facing pages and the notification email.
+// Defaults match the final site build (October 2026): no env vars are required.
+// Optional overrides in Cloudflare Pages -> Settings -> Environment variables:
+//   BUSINESS_NAME  = "Call Out Phone Repairs Pontypridd" (default)
+//   BUSINESS_HOURS = "24h" (default) or "current" (previous 08:00-20:00 wording)
+// Keep them in step with the site build settings COPR_NAME / COPR_HOURS.
+const DEFAULT_BUSINESS_NAME = "Call Out Phone Repairs Pontypridd";
+function businessConfig(env) {
+  const raw = env && typeof env.BUSINESS_NAME === "string" ? env.BUSINESS_NAME.trim() : "";
+  return {
+    name: raw ? raw.slice(0, 80) : DEFAULT_BUSINESS_NAME,
+    hours24: String((env && env.BUSINESS_HOURS) || "24h").trim().toLowerCase() !== "current",
+  };
+}
+
 export async function onRequestPost(context) {
   const { request, env } = context;
   try {
@@ -41,7 +56,8 @@ export async function onRequestPost(context) {
     const sfm = request.headers.get("Sec-Fetch-Mode") || "";
     const accept = request.headers.get("Accept") || "";
     const wantsHtml = sfm === "navigate" || (accept.includes("text/html") && sfm !== "cors" && sfm !== "same-origin");
-    const reply = (obj, status = 200) => (wantsHtml ? htmlResponse(obj, status) : json(obj, status));
+    const biz = businessConfig(env);
+    const reply = (obj, status = 200) => (wantsHtml ? htmlResponse(obj, status, biz) : json(obj, status));
 
     // 1) Honeypot — bots fill hidden fields
     if ((form.get("company") || "").trim() !== "") {
@@ -77,7 +93,7 @@ export async function onRequestPost(context) {
     }
 
     // 3) Deliver. Never fail silently.
-    const delivered = await sendEmail(env, data);
+    const delivered = await sendEmail(env, data, biz);
     if (!delivered.ok) {
       // Missing configuration -> friendly 503 (server not ready), not a crash.
       if (delivered.configError) {
@@ -128,15 +144,16 @@ function json(obj, status = 200) {
  * Mirrors the site's look minimally (no external assets) and always offers
  * WhatsApp/Call as a fallback. Success and error variants.
  */
-function htmlResponse(obj, status = 200) {
+function htmlResponse(obj, status = 200, biz = businessConfig(null)) {
   const ok = obj && obj.ok === true;
   const WA = "https://wa.me/447347715961";
   const TEL = "tel:+447347715961";
   const heading = ok ? "Thanks — we've got your enquiry" : "That didn't send";
   let message;
   if (ok) {
-    message =
-      "We'll be in touch during our hours (08:00–20:00, daily) with a price and a time that works for you. Nothing is booked until we've spoken.";
+    message = biz.hours24
+      ? "We'll be in touch with a price and a time that works for you. You can contact us 24 hours a day if it's urgent. Nothing is booked until we've spoken."
+      : "We'll be in touch during our hours (08:00–20:00, daily) with a price and a time that works for you. Nothing is booked until we've spoken.";
   } else if (obj && obj.error === "validation") {
     message =
       "Some details were missing or looked incorrect (please check your name, phone number, town and that you ticked consent), then go back and try again.";
@@ -144,26 +161,27 @@ function htmlResponse(obj, status = 200) {
     message =
       "Something went wrong on our side and your enquiry wasn't sent. Please message us on WhatsApp or give us a call — we'll help straight away.";
   }
-  const accent = ok ? "#2563EB" : "#B91C1C";
+  const accent = ok ? "#3B3FC4" : "#C81E1E";
   const body = `<!DOCTYPE html>
 <html lang="en-GB"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>${ok ? "Enquiry sent" : "Enquiry not sent"} — Call Out Phone Repairs</title>
+<title>${ok ? "Enquiry sent" : "Enquiry not sent"} — ${escapeHtml(biz.name)}</title>
 <style>
-  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:#F8FAFC;color:#0F172A;line-height:1.6}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:#F5F3FF;color:#0B1026;line-height:1.6}
   .wrap{max-width:560px;margin:0 auto;padding:48px 24px;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
-  .card{background:#fff;border:1px solid #E2E8F0;border-radius:16px;padding:32px;box-shadow:0 12px 32px rgba(15,23,42,.06)}
+  .card{background:#fff;border:1px solid #E3E1F0;border-radius:16px;padding:32px;box-shadow:0 12px 32px rgba(11,16,38,.08)}
   h1{font-size:1.5rem;margin:0 0 12px;color:${accent}}
-  p{margin:0 0 20px;color:#475569}
+  p{margin:0 0 20px;color:#4A5068}
   .btns{display:flex;flex-direction:column;gap:12px}
-  a.btn{display:block;text-align:center;text-decoration:none;font-weight:600;padding:14px 20px;border-radius:12px;border:1.5px solid #E2E8F0}
-  a.primary{background:#2563EB;color:#fff;border-color:#2563EB}
-  a.wa{background:#25D366;color:#06301B;border-color:#25D366}
-  a.ghost{background:#fff;color:#0F172A}
+  a.btn{display:block;text-align:center;text-decoration:none;font-weight:600;padding:14px 20px;border-radius:12px;border:1.5px solid #E3E1F0}
+  a.primary{background:#3B3FC4;color:#fff;border-color:#3B3FC4}
+  a.wa{background:#177A43;color:#fff;border-color:#177A43}
+  a.ghost{background:#fff;color:#0B1026}
 </style></head>
 <body><div class="wrap"><div class="card">
+  <p style="margin:0 0 8px;font-weight:600;color:#7C4DDB">${escapeHtml(biz.name)}</p>
   <h1>${heading}</h1>
   <p>${message}</p>
   <div class="btns">
@@ -187,7 +205,7 @@ function htmlResponse(obj, status = 200) {
  * The API key is read from env.RESEND_API_KEY (Cloudflare Pages env var).
  * It is never hardcoded and never sent to the browser.
  */
-async function sendEmail(env, data) {
+async function sendEmail(env, data, biz = businessConfig(env)) {
   // 10) Missing key -> friendly configuration error, no crash.
   const apiKey = env && env.RESEND_API_KEY;
   if (!apiKey) {
@@ -199,14 +217,16 @@ async function sendEmail(env, data) {
   }
 
   const deviceLabel =
-    [data.brand, data.model].filter(Boolean).join(" ") ||
     data.phone_model ||
+    (data.brand === "Other" || data.model.toLowerCase().startsWith(data.brand.toLowerCase())
+      ? data.model
+      : [data.brand, data.model].filter(Boolean).join(" ")) ||
     "(device not specified)";
   const subject = `New quote enquiry — ${deviceLabel} — ${data.town}`;
 
   // Plain-text body (primary — reliable in every mail client).
   const text =
-`New enquiry from the Call Out Phone Repairs website.
+`New enquiry from the ${biz.name} website.
 
 Name:            ${data.name}
 Phone:           ${data.phone}
@@ -250,7 +270,7 @@ Submitted:       ${data.submitted_at}
     .join("");
   const html =
     `<div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#0F172A">` +
-    `<p style="margin:0 0 12px">New enquiry from the Call Out Phone Repairs website.</p>` +
+    `<p style="margin:0 0 12px">New enquiry from the ${escapeHtml(biz.name)} website.</p>` +
     `<table style="border-collapse:collapse">${rows}</table>` +
     `</div>`;
 

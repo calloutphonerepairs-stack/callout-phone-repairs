@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 400" fill="none">
+  <title>A Galaxy-style handset with a typical AMOLED fault line beside a replacement display</title>
+  <defs>
+    <linearGradient id="s" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4B4FD0"/><stop offset="1" stop-color="#151B3D"/></linearGradient>
+    <radialGradient id="h" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ECE9FB"/><stop offset="1" stop-color="#F5F3FF" stop-opacity="0"/></radialGradient>
+  </defs>
+  <circle cx="180" cy="200" r="180" fill="url(#h)"/>
+  <!-- faulty phone -->
+  <g transform="rotate(-9 120 210)">
+    <rect x="52" y="56" width="146" height="306" rx="22" fill="#0B1026"/>
+    <rect x="58" y="62" width="134" height="294" rx="17" fill="#141936"/>
+    <circle cx="125" cy="76" r="5" fill="#0B1026" stroke="#2A3160" stroke-width="2"/>
+    <rect x="96" y="62" width="6" height="294" fill="#3BD98B" opacity=".85"/>
+    <rect x="140" y="62" width="3" height="294" fill="#E879F9" opacity=".7"/>
+    <path d="M58 250c40-20 80 10 134-14v120H58z" fill="#000" opacity=".55"/>
+  </g>
+  <!-- replacement display -->
+  <g transform="rotate(7 240 200)">
+    <rect x="166" y="44" width="146" height="306" rx="22" fill="#0B1026"/>
+    <rect x="172" y="50" width="134" height="294" rx="17" fill="url(#s)"/>
+    <circle cx="239" cy="64" r="5" fill="#0B1026"/>
+    <circle cx="239" cy="190" r="30" fill="#FFFFFF" opacity=".14"/>
+    <path d="M225 190l10 10 20-22" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M194 262h90M194 280h60" stroke="#FFFFFF" stroke-opacity=".28" stroke-width="7" stroke-linecap="round"/>
+  </g>
+  <path d="M320 80v20M310 90h20" stroke="#7C4DDB" stroke-width="4" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 360" fill="none" font-family="Inter, system-ui, -apple-system, 'Segoe UI', Arial, sans-serif">
+  <title>The layers of a phone screen: cover glass, touch layer, display panel and the phone frame</title>
+  <defs>
+    <linearGradient id="d" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4B4FD0"/><stop offset="1" stop-color="#151B3D"/></linearGradient>
+  </defs>
+  <rect width="560" height="360" rx="24" fill="#F5F3FF"/>
+  <!-- layer stack (isometric) -->
+  <g transform="translate(6 46) scale(0.84)">
+    <!-- cover glass -->
+    <path d="M40 40l150-30 120 50-150 30z" fill="#FFFFFF" stroke="#C9C2F2" stroke-width="2"/>
+    <path d="M118 46l28 18-12 18M146 64l26-4M134 82l18 14" stroke="#A78BFA" stroke-width="2" stroke-linecap="round"/>
+    <!-- touch layer -->
+    <g transform="translate(0 62)">
+      <path d="M40 40l150-30 120 50-150 30z" fill="#ECE9FB" stroke="#A78BFA" stroke-width="2"/>
+      <path d="M70 46l150-30M100 58l150-30M130 70l150-30M84 32l116 48M124 24l116 48M164 16l116 48" stroke="#A78BFA" stroke-width="1" opacity=".7"/>
+    </g>
+    <!-- display panel -->
+    <g transform="translate(0 124)">
+      <path d="M40 40l150-30 120 50-150 30z" fill="url(#d)"/>
+      <path d="M150 32l40 16" stroke="#FFFFFF" stroke-opacity=".35" stroke-width="6" stroke-linecap="round"/>
+    </g>
+    <!-- frame -->
+    <g transform="translate(0 186)">
+      <path d="M40 40l150-30 120 50-150 30z" fill="#0B1026"/>
+      <path d="M40 40v10l120 50v-10zM160 90v10l150-30v-10z" fill="#2A3160"/>
+    </g>
+  </g>
+  <!-- labels -->
+  <g font-size="21" font-weight="700" fill="#0B1026">
+    <path d="M276 104h22" stroke="#7C4DDB" stroke-width="3"/><text x="306" y="111">Cover glass</text>
+    <path d="M276 156h22" stroke="#7C4DDB" stroke-width="3"/><text x="306" y="163">Touch layer</text>
+    <path d="M276 208h22" stroke="#7C4DDB" stroke-width="3"/><text x="306" y="215">Display panel</text>
+    <path d="M276 260h22" stroke="#7C4DDB" stroke-width="3"/><text x="306" y="267">Phone frame</text>
+  </g>
+  <g font-size="16" fill="#4A5068">
+    <text x="306" y="133">cracks, chips</text>
+    <text x="306" y="185">ghost or dead touch</text>
+    <text x="306" y="237">lines, black patches</text>
+  </g>
+</svg>
